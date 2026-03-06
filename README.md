@@ -1,98 +1,87 @@
-# referendum-time
+# Referendum Time (local)
 
-> ⚠️ **This is not production-quality code.** See [docs/things-to-do.md](docs/things-to-do.md) for the full good, bad, and ugly breakdown.
+## Executive Summary
 
-A time-aware referendum tracking tool for Oregon ballot initiatives — built live as a workflow demonstration.
+**referendum-time** is a time-aware Oregon ballot-initiative tracking tool built live in just over two hours as a workflow demonstration at *Let's Build with A.I.* (Thu, Mar 05 2026) at the Metro Region Innovation Hub in Portland, Oregon. The project showcased an advanced workflow, demonstrating what an individual can ship in a single afternoon session using modern AI-assisted development tools. The idea of evaluating [Oregon House Bill 4123](https://gov.oregonlive.com/bill/2026/HB4123/) (Limits the circumstances under which a landlord may disclose confidential information) was seeded by an wonderful non-coder attendee from Salem, Oregon who is working on her own startup idea on for businesses educating their administartive staff on how to use AI effectively.
 
----
+The application idea was to answer one core question: **"How can we lookup a Oregon ballot initiative?"** and provide pros & cons with minimal bias.
 
-## Quick Facts
+> ⚠️ **Not fully working.** The bones are there, but it’s not fully polished or complete. The Brave Search integration is rate-limited and may require multiple tries to get results. The OpenAI analysis is basic and could be improved with better prompts and formatting. The UI is functional but not styled. The focus was on demonstrating the workflow, not on delivering a production-ready product.
 
-| Item | Detail |
-|---|---|
-| **Concept → Running** | Just over 2 hours |
-| **Tests** | Afterthought (added retroactively) |
-| **Primary IDE** | VSCode on macOS |
-| **Commit messages** | RepoPrompt (yes, really) |
-| **Coding agent** | pi coding agent |
-| **Event** | [Let's Build with A.I. — Thu, Mar 05](https://www.portlandmetrohub.org/event-details/lets-build-with-a-i-3) at Metro Region Innovation Hub |
-| **Idea origin** | Seeded by an attendee from Salem, OR |
+> ⚠️ **This is not production-quality code.** It was built to demonstrate workflow.
 
----
+**Table of Contents for Documentation**: [../docs/table-of-contents.md](../docs/table-of-contents.md)
 
-## LLMs Used
+## Generic Summary
 
-| Role | Model |
-|---|---|
-| Interviews & most planning | GLM 4.7 (on Cerebras) + GPT-5.2 (via pi) |
-| Code generation | GPT-5.3-codex-high (via RepoPrompt) |
-| Oracle / architecture review | GPT-5.4 (via RepoPrompt) |
-| Pro edits & polish | GPT-5.3-medium (via RepoPrompt) |
+Next.js (NEVER AGAIN) - site that:
 
-> Note: GPT-5.2 also produced a non-working scaffolding that was not requested — which was promptly ignored.
+- Searches **official Oregon sources** with **Brave Search API**
+- Generates an **informational** plain-language summary + **Pro voice vs Con voice** discussion via **OpenAI (gpt-4o-mini)**
+- Shows **titles + short snippets + links** (no full-text display)
+- Sets **noindex/nofollow** headers/meta (no SEO)
 
----
+## Setup
+
+1) Install deps
+
+```bash
+npm install
+```
+
+1) Create `.env.local`
+
+```bash
+cp .env.example .env.local
+```
+
+Fill in:
+
+- `BRAVE_SEARCH_API_KEY`
+- `OPENAI_API_KEY`
+
+> Do not commit `.env.local`.
+
+1) Run locally
+
+```bash
+npm run dev
+```
+
+Open http://localhost:3000
+
+## Notes
+
+- No database is used.
+- No caching is performed server-side (the UI provides a manual “Generate/Refresh analysis” button).
+- Accessibility: semantic landmarks + keyboard navigation + strong focus visibility + high-contrast defaults.
+- Brave Search requests are **rate-limited in-process** to avoid 429 errors. Calls are serialized and spaced to stay within the Free plan rate limit.
+- Analyses may take a few extra seconds because Brave searches are intentionally paced.
 
 ## Environment Variables
 
-Copy `.env.example` to `.env` and populate the values described below before running the application.
+### Required
+- `BRAVE_SEARCH_API_KEY` — Your Brave Search API key.
+- `OPENAI_API_KEY` — Your OpenAI API key.
+
+### Optional (Brave Search rate limiting)
+- `BRAVE_SEARCH_MIN_START_INTERVAL_MS` — Minimum time between Brave request starts (default: `1200`)
+- `BRAVE_SEARCH_MAX_ATTEMPTS` — Maximum retry attempts per request (default: `3`)
+- `BRAVE_SEARCH_RETRY_BASE_DELAY_MS` — Base delay for 429 retries (default: `1200`)
+- `BRAVE_SEARCH_RETRY_MAX_DELAY_MS` — Maximum delay for 429 retries (default: `8000`)
+
+## Tests
+
+Run unit tests:
 
 ```bash
-cp .env.example .env
-```
-
-### Required Variables
-
-| Variable | Description | Example |
-|---|---|---|
-| `DATABASE_URL` | Connection string for the primary database | `postgresql://user:pass@localhost:5432/referendum` |
-| `SECRET_KEY` | Application secret used for session signing | A long random string |
-| `API_BASE_URL` | Base URL for the referendum data API | `https://api.sos.oregon.gov/` |
-
-### Optional Variables
-
-| Variable | Description | Default |
-|---|---|---|
-| `PORT` | Port the server listens on | `3000` |
-| `LOG_LEVEL` | Logging verbosity (`debug`, `info`, `warn`, `error`) | `info` |
-| `CACHE_TTL_SECONDS` | How long to cache referendum data (seconds) | `300` |
-| `ENABLE_MOCK_DATA` | Use static mock data instead of live API | `false` |
-
-> See [docs/environment-setup.md](docs/environment-setup.md) for full setup instructions and security guidance.
-
----
-
-## Documentation
-
-Full documentation lives in the [`docs/`](docs/) directory.
-
-| File | Description |
-|---|---|
-| [docs/table-of-contents.md](docs/table-of-contents.md) | Master index of all documentation |
-| [docs/overview.md](docs/overview.md) | Project overview, goals, and executive summary |
-| [docs/logic-flow.md](docs/logic-flow.md) | System logic with Mermaid diagrams |
-| [docs/environment-setup.md](docs/environment-setup.md) | Environment variable setup guide |
-| [docs/ai-workflow.md](docs/ai-workflow.md) | AI tooling, workflow, and lessons learned |
-| [docs/things-to-do.md](docs/things-to-do.md) | Next steps, and the good, the bad & the ugly |
-
----
-
-## Running the Application
-
-```bash
-# Install dependencies
-npm install
-
-# Start the development server
-npm run dev
-
-# Run tests
 npm test
 ```
 
----
+Coverage:
 
-## License
+```bash
+npm run test:coverage
+```
 
-MIT — do whatever you like, but don't blame us when it breaks in prod (see warning above).
-
+> Unit tests mock Brave/OpenAI calls; no API keys are required to run tests.
