@@ -2,17 +2,19 @@
 
 ## Executive Summary
 
-**referendum-time** is a time-aware Oregon ballot-initiative tracking tool built live in just over two hours as a workflow demonstration at *Let's Build with A.I.* (Thu, Mar 05 2026) at the Metro Region Innovation Hub in Portland, Oregon. The project showcased an advanced workflow, demonstrating what an individual can ship in a single afternoon session using modern AI-assisted development tools. The idea of evaluating [Oregon House Bill 4123](https://gov.oregonlive.com/bill/2026/HB4123/) (Limits the circumstances under which a landlord may disclose confidential information.) was seeded by an attendee from Salem, OR
+**referendum-time** is a time-aware Oregon ballot-initiative tracking tool built live in just over two hours as a workflow demonstration at *Let's Build with A.I.* (Thu, Mar 05 2026) at the Metro Region Innovation Hub in Portland, Oregon. The project showcased an advanced workflow, demonstrating what an individual can ship in a single afternoon session using modern AI-assisted development tools. The idea of evaluating [Oregon House Bill 4123](https://gov.oregonlive.com/bill/2026/HB4123/) (Limits the circumstances under which a landlord may disclose confidential information) was seeded by an wonderful non-coder attendee from Salem, Oregon who is working on her own startup idea on for businesses educating their administartive staff on how to use AI effectively.
 
-The application answers one core question: **"How can we lookup a Oregon ballot initiative?"** and provide pros & cons with minimal bias.
+The application idea was to answer one core question: **"How can we lookup a Oregon ballot initiative?"** and provide pros & cons with minimal bias.
 
 > ⚠️ **Not fully working.** The bones are there, but it’s not fully polished or complete. The Brave Search integration is rate-limited and may require multiple tries to get results. The OpenAI analysis is basic and could be improved with better prompts and formatting. The UI is functional but not styled. The focus was on demonstrating the workflow, not on delivering a production-ready product.
 
 > ⚠️ **This is not production-quality code.** It was built to demonstrate workflow.
 
+**Table of Contents for Documentation**: [../docs/table-of-contents.md](../docs/table-of-contents.md)
+
 ## Generic Summary
 
-Next.js (Pages Router) site that:
+Next.js (NEVER AGAIN) - site that:
 
 - Searches **official Oregon sources** with **Brave Search API**
 - Generates an **informational** plain-language summary + **Pro voice vs Con voice** discussion via **OpenAI (gpt-4o-mini)**
