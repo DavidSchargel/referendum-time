@@ -1,7 +1,7 @@
 # Things To Do — referendum-time
 
 ## Note
-This was not review by a himan and may contain inaccuracies, errors, or hallucinations. Please verify all information before acting on it.
+This was not review by a human and may contain inaccuracies, errors, or hallucinations. Please verify all information before acting on it. If you dare.
 
 ## Executive Summary
 
@@ -50,7 +50,7 @@ These are the things that are genuinely bad and should not exist in any producti
 - [ ] **CORS is wide open.** All origins are allowed — acceptable for a demo, unacceptable for production
 - [ ] **No authentication or authorization.** Any user can hit any endpoint with no identity check
 - [ ] **Database credentials are in the connection string.** Consider using environment-specific credential injection instead of a raw `DATABASE_URL` with embedded password
-- [ ] **The GPT-5.2 scaffolding was silently discarded.** This means there's an implicit assumption that the scaffolding's directory layout was wrong — but this was never documented. Future contributors may be confused
+- [ ] **The GPT-5.2 scaffolding should have been discarded.** This means there's an implicit assumption that the scaffolding's directory layout was wrong — but this was never documented. Future contributors may be confused
 - [ ] **Tests were written after the fact.** This means the code was not designed for testability. Some functions will be hard to unit test without refactoring
 
 ---
@@ -117,11 +117,4 @@ If you're picking this up to learn from the workflow:
 | Source | URL |
 |---|---|
 | OWASP Top 10 | https://owasp.org/www-project-top-ten/ |
-| express-rate-limit | https://www.npmjs.com/package/express-rate-limit |
-| zod validation library | https://zod.dev |
-| Winston logging | https://www.npmjs.com/package/winston |
-| Pino logging | https://getpino.io |
-| GitHub Actions CI/CD | https://docs.github.com/en/actions |
 | WCAG 2.1 Accessibility Guidelines | https://www.w3.org/WAI/WCAG21/quickref/ |
-| Redis | https://redis.io |
-| OpenAPI Specification | https://spec.openapis.org/oas/latest.html |
