@@ -3,28 +3,7 @@ import Link from 'next/link';
 import { useCallback, useState } from 'react';
 
 import { Layout } from '@/components/Layout';
-
-type SourceItem = {
-  title: string;
-  url: string;
-  description?: string;
-};
-
-type Analysis = {
-  billId: string;
-  plainLanguageSummary: string;
-  pros: string[];
-  cons: string[];
-  whoBenefits: string[];
-  whoMightBeHarmed: string[];
-  debate: {
-    proVoice: string;
-    conVoice: string;
-  };
-  uncertainties: string[];
-  sources: SourceItem[];
-  generatedAtIso: string;
-};
+import type { Analysis } from '@/lib/analysisSchema';
 
 export const getServerSideProps: GetServerSideProps<{ billId: string }> = async (ctx) => {
   const billId = typeof ctx.params?.billId === 'string' ? ctx.params.billId : '';

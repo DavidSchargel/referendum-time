@@ -4,6 +4,7 @@ import { z } from 'zod';
 import { braveWebSearch } from '@/lib/braveSearch';
 import { getOpenAIClient } from '@/lib/openaiClient';
 import { AnalysisSchema, type SourceItem } from '@/lib/analysisSchema';
+import { normalizeBillId } from '@/lib/normalizeBillId';
 
 const RequestSchema = z.object({
   billId: z.string().min(2).max(32),
@@ -43,7 +44,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const parsed = RequestSchema.safeParse(req.body);
   if (!parsed.success) return res.status(400).send('Invalid request body');
 
-  const billId = parsed.data.billId.trim().toUpperCase().replace(/\s+/g, '');
+  const billId = normalizeBillId(parsed.data.billId);
 
   const braveKey = process.env.BRAVE_SEARCH_API_KEY;
   const openAiKey = process.env.OPENAI_API_KEY;
@@ -51,12 +52,25 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (!braveKey) return res.status(500).send('Missing BRAVE_SEARCH_API_KEY');
   if (!openAiKey) return res.status(500).send('Missing OPENAI_API_KEY');
 
-  // Official-only sources preference.
-  const domains = ['oregonlegislature.gov', 'olis.oregonlegislature.gov', 'sos.oregon.gov', 'oregon.gov'];
+  // Sources to search.
+  // Start with official state/legislative sources, but include a couple of local journalism outlets
+  // to help surface pro/con framing when official pages are sparse.
+  const domains = [
+    'oregonlegislature.gov',
+    'olis.oregonlegislature.gov',
+    'sos.oregon.gov',
+    'oregon.gov',
+    'kgw.com',
+    'portlandmercury.com',
+  ];
 
   try {
-    const searches = await Promise.all(
-      domains.map(async (domain) => {
+    // Collect sources sequentially to be tolerant of per-domain failures
+    const collected: SourceItem[] = [];
+    let successfulDomains = 0;
+
+    for (const domain of domains) {
+      try {
         const query = `${billId} site:${domain}`;
         const results = await braveWebSearch({
           query,
@@ -66,11 +80,32 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           searchLang: 'en',
           freshness: 'all',
         });
-        return results.map((r) => ({ title: r.title, url: r.url, description: r.description } satisfies SourceItem));
-      })
-    );
+        const mapped = results.map((r): SourceItem => ({
+          title: r.title,
+          url: r.url,
+          description: r.description,
+        }));
+        collected.push(...mapped);
+        successfulDomains++;
+      } catch (err) {
+        // Continue to next domain; log for visibility
+        console.warn(`Brave search failed for domain ${domain}:`, err instanceof Error ? err.message : err);
+      }
+    }
 
-    const sources = uniqByUrl(searches.flat()).slice(0, 12);
+    // If no domain succeeded, fail gracefully
+    if (successfulDomains === 0) {
+      return res.status(502).send(
+        'Unable to retrieve official sources from Brave Search for any configured domain after retries. Please try again in a few seconds.'
+      );
+    }
+
+    const sources = uniqByUrl(collected).slice(0, 12);
+
+    // If no usable sources remain, fail gracefully
+    if (sources.length === 0) {
+      return res.status(404).send(`No official-source search results were found for ${billId}.`);
+    }
 
     const persona = {
       location: 'Portland, Oregon 97206',
@@ -95,7 +130,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       `- Housing: ${persona.housing}`,
       `- Healthcare: ${persona.healthcare}`,
       '',
-      'Sources (official sites only). Use ONLY these snippets; do not invent facts:',
+      'Sources. Use ONLY these snippets; do not invent facts:',
       ...sources.map((s, i) => `#${i + 1} ${s.title}\n${s.url}\n${s.description ?? ''}`.trim()),
       '',
       'Task:',

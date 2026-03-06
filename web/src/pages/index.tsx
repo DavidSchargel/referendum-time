@@ -2,6 +2,7 @@ import { useRouter } from 'next/router';
 import { useState } from 'react';
 
 import { Layout } from '@/components/Layout';
+import { normalizeBillId } from '@/lib/normalizeBillId';
 
 export default function HomePage() {
   const router = useRouter();
@@ -19,7 +20,7 @@ export default function HomePage() {
         className="mt-6 max-w-xl rounded-lg border border-slate-200 bg-white p-4"
         onSubmit={(e) => {
           e.preventDefault();
-          const normalized = billId.trim().toUpperCase().replace(/\s+/g, '');
+          const normalized = normalizeBillId(billId);
           if (!normalized) return;
           void router.push(`/bill/${encodeURIComponent(normalized)}`);
         }}

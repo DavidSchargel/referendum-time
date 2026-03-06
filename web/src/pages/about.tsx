@@ -9,7 +9,7 @@ export default function AboutPage() {
         <section className="space-y-2">
           <h2 className="text-base font-semibold">What this site does</h2>
           <ul className="list-disc space-y-1 pl-5">
-            <li>Uses Brave Search to find official sources related to a bill (e.g., oregonlegislature.gov, sos.oregon.gov).</li>
+            <li>Uses Brave Search to find sources related to a bill (prioritizing official sites like oregonlegislature.gov and sos.oregon.gov, and also including local outlets like kgw.com and portlandmercury.com for additional context).</li>
             <li>Shows links and short snippets (no full-text scraping displayed).</li>
             <li>Uses an LLM to generate an informational summary and a “Pro voice vs Con voice” discussion.</li>
           </ul>
