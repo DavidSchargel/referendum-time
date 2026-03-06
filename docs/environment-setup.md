@@ -10,8 +10,11 @@ This guide walks through every environment variable used by referendum-time, exp
 
 - Node.js ≥ 18.x (LTS recommended)
 - npm ≥ 9.x
-- A PostgreSQL instance (optional — only needed if `DATABASE_URL` is set)
+- RepoPrompt & pi coding agent
+- OpenAI API key (for AI-assisted coding features)
+- Brave Search API key (for AI-assisted web search features)
 - Network access to the Oregon SOS API (or set `ENABLE_MOCK_DATA=true` to skip)
+- (optional) A PostgreSQL instance (only needed if `DATABASE_URL` is set)
 
 ---
 
@@ -233,9 +236,5 @@ Tests use mock data by default (`ENABLE_MOCK_DATA=true` is set in the test envir
 
 | Source | URL |
 |---|---|
-| dotenv npm package | https://www.npmjs.com/package/dotenv |
-| Node.js environment variables guide | https://nodejs.dev/en/learn/how-to-read-environment-variables-from-nodejs/ |
-| OWASP secrets management cheat sheet | https://cheatsheetseries.owasp.org/cheatsheets/Secrets_Management_Cheat_Sheet.html |
-| openssl rand reference | https://www.openssl.org/docs/man1.0.2/man1/openssl-rand.html |
-| PostgreSQL connection strings | https://www.postgresql.org/docs/current/libpq-connect.html#LIBPQ-CONNSTRING |
-| GitHub Actions Secrets | https://docs.github.com/en/actions/security-guides/encrypted-secrets |
+| pi Coding Agent | https://github.com/badlogic/pi-mono/tree/main/packages/coding-agent |
+| RepoPrompt | https://repoprompt.com/ |

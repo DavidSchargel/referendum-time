@@ -1,5 +1,8 @@
 # Things To Do — referendum-time
 
+## Note
+This was not review by a himan and may contain inaccuracies, errors, or hallucinations. Please verify all information before acting on it.
+
 ## Executive Summary
 
 This document serves as the project backlog and honest retrospective for referendum-time. It captures what should be done next to make this a real, production-worthy application, as well as a frank assessment of the current state of the code: the good, the bad, and the truly ugly.
