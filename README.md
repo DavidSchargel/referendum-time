@@ -10,7 +10,9 @@ The application idea was to answer one core question: **"How can we lookup a Ore
 
 > ⚠️ **This is not production-quality code.** It was built to demonstrate workflow.
 
-**Table of Contents for Documentation**: [../docs/table-of-contents.md](../docs/table-of-contents.md)
+## Table of Contents for Documentation
+
+[Table of Contents](https://github.com/DavidSchargel/referendum-time/blob/main/docs/table-of-contents.md)
 
 ## Generic Summary
 
