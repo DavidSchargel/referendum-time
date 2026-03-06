@@ -1,1 +1,2 @@
-.pi/readcache/
+.pi/readcache/objects/*
+web/.next/*

@@ -1,0 +1,34 @@
+<task>
+Slow down/throttle Brave Search API usage in this Next.js app so we stop hitting HTTP 429 RATE_LIMITED on Brave Free plan.
+Grounded entrypoints (from initial scan):
+- web/src/lib/braveSearch.ts (braveWebSearch wrapper, throws on non-OK)
+- web/src/pages/api/analyze.ts (calls braveWebSearch using BRAVE_SEARCH_API_KEY)
+Goal: introduce pacing / concurrency control / retry/backoff / caching so the app stays under Brave's rate limit.
+</task>
+
+<context>
+Success criteria (initial guess):
+- Brave Search calls are rate-limited to <= 1 request/second (or whatever Brave indicates) across relevant code paths.
+- If Brave returns 429, we back off and retry (bounded) or degrade gracefully without crashing the whole analysis.
+- Avoid parallel Brave calls that exceed the limit.
+- Keep code consistent with existing patterns in repo.
+
+Known constraints:
+- Brave Free plan rate_limit appears to be 1 (from error meta.rate_limit=1).
+- Project is a Next.js app under web/ using pages/api.
+
+Non-goals / out of scope:
+- Upgrading Brave plan / external infra changes unless already present.
+- Major redesign of analysis pipeline.
+
+Token budget target: ~60k
+</context>
+
+<discovery_agent-guidelines>
+Focus on likely entrypoints + adjacent impacted systems.
+Prefer codemaps/slices for breadth; full content only for key files.
+Return:
+1) Current-state summary (facts only; cite paths)
+2) Existing patterns/conventions worth following (cite paths)
+3) Candidate open decisions, tagged FACT vs DESIGN vs PREFERENCE
+</discovery_agent-guidelines>
